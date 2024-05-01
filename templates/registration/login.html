@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block content2 %}
+<section class="about-section text-center" id="login">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-lg-8">
+                <div class="col-md-10 col-lg-4 mx-auto text-center">
+                    <i class="fas fa-sign-in-alt fa-1x mb-3 text-white"></i>
+                    <h3 class="text-white mb-4">Login</h3>
+                    <!-- Login Form -->
+                    <form method="post" action="{% url 'login' %}#login" class="form-signup">
+                    {% csrf_token %}
+                    <!-- Username input-->
+                        <div class="row input-group-newsletter">
+                          <div class="col">
+                            {{ form.username | add_place_holder:"Username" | add_class:"form-control mb-3"}}
+                          </div>
+                        </div>
+                        <!-- Password input-->
+                        <div class="row input-group-newsletter">
+                          <div class="col">
+                                {{ form.password | add_place_holder:"Password" | add_class:"form-control mb-3"}}
+                          </div>
+                        </div>
+                        <input type="hidden" name="next" value="{{ next }}">
+                        <!-- Submit Button-->
+                        <div class="row input-group-newsletter">
+                          <div class="col mb-3">
+                            <input class="btn btn-primary" type="submit" value="Login" />
+                          </div>
+                        </div>
+                    <!-- Error Messages -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger mt-3" role="alert">
+                          Login error, try again!
+                        </div>
+                    {% endif %}
+                    {% if next %}
+                      {% if user.is_authenticated %}
+                          <div class="alert alert-danger mt-3" role="alert">
+                            You have not access. Need to log in!
+                          </div>
+                      {% endif %}
+                    {% endif %}
+                    </form>
+                    <div class="mb-4"><a href="{% url 'password_reset' %}">Forgot your password?</a></div>
+                </div>
+            </div>
+            <div class="w-150">
+                <img class="img-fluid" src="{% static 'assets/img/solar3.png' %}" alt="..." />
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

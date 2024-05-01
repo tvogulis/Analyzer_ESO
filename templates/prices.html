@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block content3 %}
+<section class="about-section text-center" >
+    <div class="container px-4 px-lg-5" id="start">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <h4 class="text-white mb-2 mt-3 text-center">Default prices for {{object.date|date:"Y-m-d"}}</h4>
+            <h5 class="text-red mb-1 text-center">Necessary update your plant kW at ESO for correct calculations</h5>
+            <h5 class="text-grey mb-2 text-center">Update any numbers you need depending on your contracts</h5>
+            <style>
+                table {
+                    width:90%;
+                    border:1px solid #e44e4e;
+                    border-collapse:collapse;
+                    padding:5px;
+                }
+                table th {
+                    border:1px solid #e44e4e;
+                    padding:5px;
+                    color: #ffffff;
+                }
+                table td {
+                    border:1px solid #e44e4e;
+                    text-align:center;
+                    padding:5px;
+                    color: #ffffff;
+                }
+            </style>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date of prices</th>
+                        <th>Plan for kWh <br> (1 kWh price)</th>
+                        <th>Plan for kW <br> (1 kW monthly price)</th>
+                        <th>Plan percent of kWh</th>
+                        <th>kWh price to buy</th>
+                        <th>kWh price to sell</th>
+                        <th><strong>YOUR PV kW at ESO</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{object.date|date:"Y-m-d"}}</td>
+                        <td>{{object.price_kwh}} €</td>
+                        <td>{{object.price_kw}} €</td>
+                        <td>{{object.price_percent}}%</td>
+                        <td>{{object.supplier_price}} €</td>
+                        <td>{{object.sell_price}} €</td>
+                        <td style="background-color: #f00;"><strong>{{object.plant_power}} kW</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            {% if messages %}
+                {% for message in messages %}
+                    <<div class="text-{% if message.tags == 'error' %}red{% elif message.tags == 'info' %}white{% elif message.tags == 'success' %}green{% endif %}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <div class="col mb-2 mt-2">
+                <a class="btn btn-primary py-2" href="{% url 'update_price' object.pk %}#start">Edit your data</a>
+            </div>
+            <h4 class="text-white mb-1 mt-1 text-center">Total consumption/PV generation</h4>
+            <h5 class="text-grey mb-2 text-center">Data for {{month_count}} months found in report</h5>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Total PV generated kWh</th>
+                        <th>Total uploaded to GRID kWh</th>
+                        <th>Total consumed from GRID kWh</th>
+                        <th>Total consumed kWh</th>
+                        <th>Direct consumed kWh</th>
+                        <th>Part consumed direct %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td>{{total_pv_generated}} kWh</td>
+                        <td>{{total_p_minus}} kWh</td>
+                        <td>{{total_p_plus}} kWh</td>
+                        <td>{{total_total_consumption}} kWh</td>
+                        <td>{{direct_consumption}} kWh</td>
+                        <td>{{direct_consumption_percent}} %</td>
+                    </tr>
+                    <tr>
+                        <td class="text-grey text-nowrap">Average per month</td>
+                        <td class="text-grey">{{avg_generation_month}} kWh</td>
+                        <td class="text-grey">{{avg_p_minus_month}} kWh</td>
+                        <td class="text-grey">{{avg_p_plus_month}} kWh</td>
+                        <td class="text-grey">{{avg_total_month}} kWh</td>
+                        <td class="text-grey">{{avg_direct_month}} kWh</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <h4 class="text-white mb-2 mt-2 text-center">Calculations table</h4>
+            <h5 class="text-white mb-2 text-center highlight-green">Best plan for you is highlighted plan</h5>
+            {% if object.plant_power == 0 %}
+                <h5 class="text-red mb-2 text-center">Check "YOUR PV kW at ESO" now ={{object.plant_power}} kW
+                    <a class="text-grey" href="{% url 'update_price' object.pk %}#start">Edit your data</a>
+                </h5>
+            {% endif %}
+            {% if total_pv_generated == 0 %}
+                <h5 class="text-red mb-2 text-center">Check "Total PV generated kWh" now ={{total_pv_generated}} kWh
+                    <a class="text-grey" href="{% url 'pv_gen' csv_file_pk %}#start">Enter PV generated kWh</a>
+                </h5>
+            {% endif %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Plan</th>
+                        <th>Payment for selected plan</th>
+                        <th>Missing kWh to buy</th>
+                        <th>Payment for missing kWh</th>
+                        <th>Unused kWh to sell</th>
+                        <th>Income for unused kWh</th>
+                        <th><strong>BALANCE €</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="{% if best_plan == 1 %}highlight-green{% endif %}">Payment for kWh</td>
+                        <td class="text-{% if eu_kwh_plan == 0 %}grey{% else %}orange{% endif %}">{{eu_kwh_plan}} €</td>
+                        <td class="text-{% if missing_kwh_first == 0 %}grey{% else %}red{% endif %}">{{missing_kwh_first}}</td>
+                        <td class="text-{% if eu_buy_first == 0 %}grey{% else %}red{% endif %}">{{eu_buy_first}} €</td>
+                        <td class="text-{% if unused_kwh_first == 0 %}grey{% else %}blue{% endif %}">{{unused_kwh_first}}</td>
+                        <td class="text-{% if eu_sell_first == 0 %}grey{% else %}blue{% endif %}">{{eu_sell_first}} €</td>
+                        <td class="text-{% if balance_first == 0 %}white{% elif balance_first > 0 %}orange{% elif balance_first < 0 %}white{% endif %} {% if best_plan == 1 %}highlight-green{% endif %}"><strong>{{balance_first}} €</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="{% if best_plan == 2 %}highlight-green{% endif %}">Payment for kW</td>
+                        <td class="text-{% if eu_kw_plan == 0 %}grey{% else %}orange{% endif %}">{{eu_kw_plan}} €</td>
+                        <td class="text-{% if missing_kwh_first == 0 %}grey{% else %}red{% endif %}">{{missing_kwh_first}}</td>
+                        <td class="text-{% if eu_buy_first == 0 %}grey{% else %}red{% endif %}">{{eu_buy_first}} €</td>
+                        <td class="text-{% if unused_kwh_first == 0 %}grey{% else %}blue{% endif %}">{{unused_kwh_first}}</td>
+                        <td class="text-{% if eu_sell_first == 0 %}grey{% else %}blue{% endif %}">{{eu_sell_first}} €</td>
+                        <td class="text-{% if balance_second == 0 %}white{% elif balance_second > 0 %}orange{% elif balance_second < 0 %}white{% endif %} {%if best_plan == 2 %}highlight-green{% endif %}"><strong>{{balance_second}} €</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="text-nowrap {% if best_plan == 3 %}highlight-green{% endif %}">{{object.price_percent}}% of uploaded kWh</td>
+                        <td class="text-{% if 0 == 0 %}grey{% else %}orange{% endif %}"> 0 €</td>
+                        <td class="text-{% if missing_kwh_third == 0 %}grey{% else %}red{% endif %}">{{missing_kwh_third}}</td>
+                        <td class="text-{% if eu_buy_third == 0 %}grey{% else %}red{% endif %}">{{eu_buy_third}} €</td>
+                        <td class="text-{% if unused_kwh_third == 0 %}grey{% else %}blue{% endif %}">{{unused_kwh_third}}</td>
+                        <td class="text-{% if eu_sell_third == 0 %}grey{% else %}blue{% endif %}">{{eu_sell_third}} €</td>
+                        <td class="text-{% if balance_third == 0 %}white{% elif balance_third > 0 %}orange{% elif balance_third < 0 %}white{% endif %} {% if best_plan == 3 %}highlight-green{% endif %}"><strong>{{balance_third}} €</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="col mb-3 mt-3">
+                <a class="btn btn-info" href="{% url 'list' %}#start">Back</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+
+
+
+

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content2 %}
+<section class="about-section text-center" id="register">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-lg-8">
+                <div class="col-md-10 col-lg-4 mx-auto text-center">
+                    <i class="fas fa-regular fa-address-card fa-1x mb-1 text-white"></i>
+                    <h3 class="text-white mb-3">Register</h3>
+                        <!-- Login Form -->
+                        <form method="post" class="form-signup">
+                            {% csrf_token %}
+                            <!-- Username input-->
+                            <div class="row input-group-newsletter">
+                                <div class="col">
+                                    <input class="form-control mb-1" type="text" name="username" placeholder="Enter Username"  autocapitalize="none"  maxlength="150" required="" id="username">
+                                </div>
+                            </div>
+                            <!-- Email input-->
+                            <div class="row input-group-newsletter">
+                                <div class="col">
+                                    <input class="form-control mb-1" type="email" name="email" placeholder="Enter Email" required="">
+                                </div>
+                            </div>
+                            <!-- Password input-->
+                            <div class="row input-group-newsletter">
+                                <div class="col">
+                                    <input class="form-control mb-1" type="password" name="password" placeholder="Enter Password" required="" >
+                                </div>
+                            </div>
+                            <!-- Password repeat-->
+                            <div class="row input-group-newsletter">
+                                <div class="col">
+                                    <input class="form-control mb-1" type="password" name="password2" placeholder="Repeat Password" required="" >
+                                </div>
+                            </div>
+                            <!-- Submit Button-->
+                            <div class="row input-group-newsletter">
+                                <div class="col mb-3">
+                                    <input class="btn btn-primary" type="submit" value="Register" />
+                                </div>
+                            </div>
+                        </form>
+                    <div class="text-white mb-4">If already registered, <a href="{% url 'index' %}#login">Login</a></div>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="text-{% if message.tags == 'error' %}red{% elif message.tags == 'info' %}green{% endif %}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    </div>
+                </div>
+            <div class="w-150">
+                <img class="img-fluid" src="{% static 'assets/img/solar3.png' %}" alt="..." />
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

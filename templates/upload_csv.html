@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block content3 %}
+<section class="about-section text-center" id="start">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-lg-8">
+                <div class="col-md-10  mx-auto text-center">
+                    <h3 class="text-white mb-4">Upload a Document</h3>
+                    <!-- Upload Form-->
+                    <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <!-- Select File-->
+                        <div class="row input-group-newsletter justify-content-center">
+                          <div class="col col-lg-5">
+                              {{ form.csv_file | add_class:"form-control mb-2" }}
+                          </div>
+                        </div>
+                        <!-- Description -->
+                        <div class="row input-group-newsletter">
+                            <div class="col">
+                                <h5 class="text-white mb-1">Describe your file</h5>
+                                {{ form.description | add_place_holder:"Description i.e. object adress, report date, etc." | add_class:"form-control mb-3" }}
+                            </div>
+                        </div>
+                        <!-- Submit Button-->
+                        <div class="row input-group-newsletter">
+                            <div class="col mb-3">
+                                <input class="btn btn-primary" type="submit" value="Upload" />
+                            </div>
+                            <h5 class="text-white mb-4">If finished with uploads press:</h5>
+                            <div class="col mb-3">
+                                <a class="btn btn-success" href="{% url 'index' %}#start">Go back</a>
+                            </div>
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <<div class="text-{% if message.tags == 'error' %}red{% elif message.tags == 'info' %}white{% elif message.tags == 'success' %}green{% endif %}" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

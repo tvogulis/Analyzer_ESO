@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block content3 %}
+<section class="about-section text-center" id="start">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-lg-8">
+                <div class="mx-auto text-center">
+                    <h3 class="text-white mb-3">{{object.upload_date|date:"Y-m-d"}} </h3>
+                    <h5 class="text-white mb-3">{{object.description}} </h5>
+                    <form method="POST" action="{% url 'pv_values_to_model' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="pk" value="{{ object.pk }}">
+                        <table class="table-bordered" style="margin-left: auto; margin-right:">
+                            <thead>
+                                <tr class="text-white">
+                                    <th class="text-nowrap">Date</th>
+                                    <th>Consumption kWh</th>
+                                    <th>Upload to GRID kWh</th>
+                                    <th>PV generated kWh</th>
+                                    <th>Enter PV generated to update values kWh</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for x in csvfileupload.calculations_set.all %}
+                                <tr class="text-white fs-5">
+                                    <td class="text-nowrap ">{{ x.date | date:"Y-m" }}</td>
+                                    <td >{{ x.sum_p_plus }}</td>
+                                    <td>{{ x.sum_p_minus }}</td>
+                                    <td>{{ x.pv_generated }}</td>
+                                    <td><input class="form-control" type="number" min="0" name="{{ x.id }}" placeholder="Enter PV {{ x.date | date:'Y-m' }} kWh "></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert text-{% if message.tags == 'error' %}red{% elif message.tags == 'info' %}white{% elif message.tags == 'success' %}green{% endif %}" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <div class="col mb-3 mt-3">
+                            <a class="btn btn-info" href="{% url 'list' %}#start">Back</a>
+                            <input class="btn btn-primary" type="submit" value="Save" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+
+
+
+

@@ -1,0 +1,6 @@
+.venv/
+.idea/
+__pycache__/
+*.log
+eso_analyzer/media/uploads/
+eso_analyzer/media/nord_pool/

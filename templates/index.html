@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+{% if user.is_authenticated %}
+  <h2 class="text-white-50 mx-auto mt-2 mb-auto">Welcome!</h2>
+  <h2 class="text-white-50 mx-auto mt-2 mb-auto">Total registered users: {{ users_total }}</h2>
+  <h2 class="text-white-50 mx-auto mt-2 mb-5">This is your visit number: {{ num_visits }}</h2>
+{% else %}
+  <h2 class="text-white-50 mx-auto mt-2 mb-auto">Welcome!</h2>
+  <h2 class="text-white-50 mx-auto mt-2 mb-auto"><br></h2>
+  <h2 class="text-white-50 mx-auto mt-2 mb-5"><br></h2>
+{% endif %}
+{% endblock %}

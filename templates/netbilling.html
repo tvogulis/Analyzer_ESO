@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block content3 %}
+<section class="about-section text-center" >
+    <div class="container px-4 px-lg-5" id="start">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <h4 class="text-white mb-0 mt-3 text-center">Netbilling simulation</h4>
+            <p class="text-white mb-0 mt-1 text-center">Nord Pool prices from {{start_date | date:"Y-m-d"}} to {{end_date | date:"Y-m-d"}}</p>
+            <p class="text-white mb-0 mt-1 text-center">Your report from {{user_start_date | date:"Y-m-d"}} to {{user_end_date | date:"Y-m-d"}}</p>
+            <p class="text-white mb-2 mt-1 text-center">If need more Nord Pool prices ask Admin to update</p>
+            <style>
+                table {
+                    width:90%;
+                    border:1px solid #e44e4e;
+                    border-collapse:collapse;
+                    padding:5px;
+                }
+                table th {
+                    border:1px solid #e44e4e;
+                    padding:5px;
+                    color: #ffffff;
+                }
+                table td {
+                    border:1px solid #e44e4e;
+                    text-align:center;
+                    padding:5px;
+                    color: #ffffff;
+                    font-size: 16px;
+                }
+            </style>
+            <table class="table-bordered" style="margin-left: auto; margin-right:">
+                <thead>
+                    <tr class="text-white">
+                        <th class="text-nowrap">Date</th>
+                        <th>Payment for used kWh</th>
+                        <th>Income for uploaded kWh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for x in monthly_data %}
+                    <tr class="text-white fs-5">
+                        <td class="text-nowrap ">{{ x.date | date:"Y-m" }}</td>
+                        <td >{{ x.p_plus }} €</td>
+                        <td>{{ x.p_minus }} €</td>
+                    </tr>
+                {% endfor %}
+                    <tr>
+                        <td class="text-green text-nowrap "><h5><strong>TOTAL</strong></h5></td>
+                        <td class="text-green text-nowrap "><h5><strong>{{ total_sum_p_plus }} €</strong></h5></td>
+                        <td class="text-green text-nowrap "><h5><strong>{{ total_sum_p_minus }} €</strong></h5></td>
+                    </tr>
+                </tbody>
+            </table>
+            {% if total_balance == 0 %}
+            <div class="text-grey mb-3 mt-3"><h5><strong>You have perfect balance and it is {{total_balance}} €</strong></h5></div>
+            {% elif total_balance > 0 %}
+            <div class="text-orange mb-3 mt-3"><h5><strong>You have to pay in netbilling model {{total_balance}} €</strong></h5></div>
+            {% elif total_balance < 0 %}
+            <div class="text-blue mb-3 mt-3"><h5><strong>You have income in netbilling model {{total_balance}} €</strong></h5></div>
+            {% endif %}
+            <div class="text-white">Time for netbilling simuliation: {{spend_time}} s</strong></h5></div>
+            <div class="col mb-3 mt-3">
+                <a class="btn btn-info" href="{% url 'list' %}#start">Back</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+
+
+
+
