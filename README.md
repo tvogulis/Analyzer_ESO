@@ -2,7 +2,7 @@
 
 **This is an ESO report analyzer to choose the best plan for PV plant users**
 
-Just generate an hourly or 15-minutes report on ESO at https://mano.eso.lt/ and upload it to the site
+Just generate hourly report on ESO at https://mano.eso.lt/ and upload it to the site
 
 **Instaliation**
 
@@ -52,7 +52,7 @@ Short instruction for users
 
 - Register
 - Login
-- Generate ESO report at <https://mano.eso.lt/> for the period you want calculations for. Like example for a 12-month period. It could be hourly or 15-minutes report.
+- Generate ESO hourly report at <https://mano.eso.lt/> for the period you want calculations for. Like example for a 12-month period. 
 - Upload ESO generated report, use UPLOAD NEW CSV, write description
 - Enter to LIST UPLOADED DOCUMENTS
 - ENTER PV GENERATED KWH month by month, this will help more accurate calculate data 
